@@ -9,11 +9,12 @@ interface EmailFormProps {
   setEmail: Dispatch<SetStateAction<string>>;
   message: string;
   setMessage: Dispatch<SetStateAction<string>>;
+  location: GeolocationCoordinates | null;
   formSize?: 'sm' | 'md' | 'lg';
   buttonSize?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
-const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, formSize = 'md', buttonSize = 'lg' }: EmailFormProps) => {
+const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, location, formSize = 'md', buttonSize = 'lg' }: EmailFormProps) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showMenu, setShowMenu] = useState(false);
 
@@ -29,18 +30,29 @@ const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, 
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Debug: Log location data
+    console.log('Location data being sent:', location);
+    console.log('Location coordinates:', location ? { lat: location.latitude, lng: location.longitude } : 'No location');
+    
     // Use the deployed API endpoint
     const endpoint = (window as any).pinsafeEndpoint || import.meta.env.VITE_API_ENDPOINT || 'https://location-api-backend.onrender.com/api/location';
     try {
-      await fetch(endpoint, {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
           message,
-          location: (window as any).pinsafeLocation || null,
+          location: location,
         }),
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      console.log('Location sent successfully');
     } catch (err) {
       // Optionally handle error
       console.error('Error sending location:', err);

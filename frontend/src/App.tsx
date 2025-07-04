@@ -37,14 +37,20 @@ function App() {
 
   useEffect(() => {
     if (!location) {
+      console.log('Requesting location...');
       navigator.geolocation.getCurrentPosition(
-        (pos) => setLocation(pos.coords),
-        (err) => setLocationError('Location permission denied or unavailable.')
+        (pos) => {
+          console.log('Location obtained:', pos.coords);
+          setLocation(pos.coords);
+        },
+        (err) => {
+          console.error('Location error:', err);
+          setLocationError('Location permission denied or unavailable.');
+        }
       );
     }
-    // Expose location and onSent handler for EmailForm
-    (window as any).pinsafeLocation = location;
-    (window as any).pinsafeOnSent = () => {
+    // Handle successful location sharing
+    const handleLocationSent = () => {
       setIsLoading(false);
       setIsSent(true);
       setRecipient(email);
@@ -52,6 +58,9 @@ function App() {
       prev = [email, ...prev.filter((em: string) => em !== email)].slice(0, 3);
       localStorage.setItem('pinsafe_emails', JSON.stringify(prev));
     };
+    
+    // Expose onSent handler for EmailForm
+    (window as any).pinsafeOnSent = handleLocationSent;
   }, [location, email]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -116,6 +125,7 @@ function App() {
                   setEmail={setEmail}
                   message={message}
                   setMessage={setMessage}
+                  location={location}
                   formSize="lg"
                   buttonSize="xl"
                 />
