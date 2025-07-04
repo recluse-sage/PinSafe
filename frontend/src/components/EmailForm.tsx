@@ -1,5 +1,5 @@
-import { useEffect, useState, Dispatch, SetStateAction } from 'react';
-import { VStack, Input, Textarea, Button, Menu, MenuButton, MenuList, MenuItem, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
+import { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react';
+import { VStack, Input, Textarea, Button, Menu, MenuButton, MenuList, MenuItem, InputGroup, InputRightElement, IconButton, Box } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 
 interface EmailFormProps {
@@ -10,13 +10,16 @@ interface EmailFormProps {
   message: string;
   setMessage: Dispatch<SetStateAction<string>>;
   location: GeolocationCoordinates | null;
+  name: string;
+  setName: Dispatch<SetStateAction<string>>;
   formSize?: 'sm' | 'md' | 'lg';
   buttonSize?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
-const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, location, formSize = 'md', buttonSize = 'lg' }: EmailFormProps) => {
+const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, location, name, setName, formSize = 'md', buttonSize = 'lg' }: EmailFormProps) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showMenu, setShowMenu] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const prev = JSON.parse(localStorage.getItem('pinsafe_emails') || '[]');
@@ -45,6 +48,7 @@ const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, 
           email,
           message,
           location: location,
+          name,
         }),
       });
       
@@ -62,46 +66,86 @@ const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, 
 
   return (
     <form onSubmit={handleFormSubmit} style={{ width: '100%' }}>
-      <VStack spacing={6} align="stretch">
-        <InputGroup>
-          <Input
-            type="email"
-            placeholder="Recipient's Email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            bg="white"
-            color="text"
-            _placeholder={{ color: 'gray.500' }}
-            autoComplete="off"
-            onFocus={() => setShowMenu(true)}
-            onBlur={() => setTimeout(() => setShowMenu(false), 150)}
-            size={formSize}
-            h={formSize === 'lg' ? 14 : undefined}
-            fontSize={formSize === 'lg' ? 'xl' : undefined}
-          />
-          {suggestions.length > 0 && (
-            <InputRightElement width="3rem">
-              <IconButton
-                aria-label="Show suggestions"
-                icon={<ChevronDownIcon />}
-                size="sm"
-                variant="ghost"
-                onClick={() => setShowMenu((v) => !v)}
-                tabIndex={-1}
-              />
-            </InputRightElement>
-          )}
+      <VStack spacing={{ base: 4, md: 6 }} align="stretch" w="100%">
+        {/* Name Field */}
+        <Input
+          type="text"
+          placeholder="Your Name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          required
+          bg="white"
+          color="text"
+          _placeholder={{ color: 'gray.500' }}
+          autoComplete="off"
+          size={formSize}
+          h={formSize === 'lg' ? 14 : undefined}
+          fontSize={formSize === 'lg' ? 'xl' : undefined}
+          w="100%"
+        />
+        {/* Email Field and Suggestions */}
+        <Box position="relative" w="100%">
+          <InputGroup>
+            <Input
+              ref={inputRef}
+              type="email"
+              placeholder="Recipient's Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              bg="white"
+              color="text"
+              _placeholder={{ color: 'gray.500' }}
+              autoComplete="off"
+              onFocus={() => setShowMenu(true)}
+              onBlur={() => setTimeout(() => setShowMenu(false), 150)}
+              size={formSize}
+              h={formSize === 'lg' ? 14 : undefined}
+              fontSize={formSize === 'lg' ? 'xl' : undefined}
+              w="100%"
+            />
+            {suggestions.length > 0 && (
+              <InputRightElement width="3rem">
+                <IconButton
+                  aria-label="Show suggestions"
+                  icon={<ChevronDownIcon />}
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowMenu((v) => !v)}
+                  tabIndex={-1}
+                />
+              </InputRightElement>
+            )}
+          </InputGroup>
+          {/* Suggestion Dropdown */}
           {showMenu && suggestions.length > 0 && (
-            <Menu isOpen={showMenu} placement="bottom-start">
-              <MenuList minW="0" p={0} mt={1} borderRadius="md" boxShadow="md">
-                {suggestions.map((s, i) => (
-                  <MenuItem key={i} onClick={() => handleSuggestion(s)}>{s}</MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
+            <Box
+              position="absolute"
+              top="100%"
+              left={0}
+              w="100%"
+              zIndex={10}
+              bg="white"
+              borderRadius="md"
+              boxShadow="md"
+              mt={1}
+              overflow="hidden"
+            >
+              {suggestions.map((s, i) => (
+                <Box
+                  key={i}
+                  px={4}
+                  py={2}
+                  _hover={{ bg: 'gray.100', cursor: 'pointer' }}
+                  onMouseDown={() => handleSuggestion(s)}
+                  fontSize={{ base: 'md', md: 'lg' }}
+                >
+                  {s}
+                </Box>
+              ))}
+            </Box>
           )}
-        </InputGroup>
+        </Box>
         <Textarea
           placeholder="Optional Message (e.g., 'I'm in a blue car')"
           value={message}
@@ -112,6 +156,7 @@ const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, 
           size={formSize}
           h={formSize === 'lg' ? 32 : undefined}
           fontSize={formSize === 'lg' ? 'xl' : undefined}
+          w="100%"
         />
         <Button
           type="submit"

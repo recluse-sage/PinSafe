@@ -34,6 +34,7 @@ function App() {
   const [email, setEmail] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [recipient, setRecipient] = useState<string>('');
+  const [name, setName] = useState<string>('');
 
   useEffect(() => {
     if (!location) {
@@ -81,17 +82,39 @@ function App() {
   return (
     <Box minH="100vh" w="100vw" bgGradient="linear(to-br, background 60%, trustBlue.50 100%)" fontFamily="Montserrat, Inter, system-ui, sans-serif">
       {/* Navbar */}
-      <Flex as="nav" w="100%" px={10} py={4} align="center" boxShadow="sm" bg="white">
+      <Flex as="nav" w="100%" px={{ base: 4, md: 10 }} py={4} align="center" boxShadow="sm" bg="white">
         <Heading as="h1" size="lg" color="trustBlue.500" letterSpacing="tight">PinSafe</Heading>
       </Flex>
-      <Flex w="100vw" minH="calc(100vh - 64px)" align="center" justify="center">
-        <Flex w="60vw" maxW="1200px" justify="space-between" align="center">
+      <Flex w="100vw" minH="calc(100vh - 64px)" align="center" justify="center" px={{ base: 2, md: 0 }}>
+        <Flex
+          w={{ base: '100vw', md: '90vw', lg: '60vw' }}
+          maxW="1200px"
+          justify="space-between"
+          align="center"
+          direction={{ base: 'column', md: 'row' }}
+          gap={{ base: 8, md: 0 }}
+          py={{ base: 8, md: 0 }}
+        >
           {/* Company Details Card */}
-          <Box w="45%" minW="320px" maxW="480px" bg="white" borderRadius="2xl" boxShadow="2xl" p={10} borderWidth={2} borderColor="trustBlue.100" display="flex" flexDirection="column" justifyContent="center">
-            <Heading as="h1" size="2xl" color="trustBlue.500" mb={2} fontWeight="bold" letterSpacing="tight">
+          <Box
+            w={{ base: '100%', md: '45%' }}
+            minW="0"
+            maxW="480px"
+            bg="white"
+            borderRadius="2xl"
+            boxShadow="2xl"
+            p={{ base: 6, md: 10 }}
+            borderWidth={2}
+            borderColor="trustBlue.100"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            my={{ base: 8, md: 'auto' }}
+          >
+            <Heading as="h1" size={{ base: 'lg', md: '2xl' }} color="trustBlue.500" mb={2} fontWeight="bold" letterSpacing="tight">
               PinSafe
             </Heading>
-            <Text fontSize="xl" color="text" mb={4} fontWeight="medium">
+            <Text fontSize={{ base: 'md', md: 'xl' }} color="text" mb={4} fontWeight="medium">
               Instantly Share Your Location. Stay Safe and Connected.
             </Text>
             <Box mb={6}><Divider /></Box>
@@ -99,7 +122,7 @@ function App() {
               {featureList.map((f, i) => (
                 <HStack key={i} spacing={4}>
                   <Icon as={f.icon} boxSize={8} color="trustBlue.500" />
-                  <Text fontSize="lg" color="text">{f.text}</Text>
+                  <Text fontSize={{ base: 'md', md: 'lg' }} color="text">{f.text}</Text>
                 </HStack>
               ))}
             </VStack>
@@ -109,10 +132,19 @@ function App() {
             </Text>
           </Box>
           {/* Email Form */}
-          <Box w="45%" minW="320px" maxW="480px" mx={8} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+          <Box
+            w={{ base: '100%', md: '45%' }}
+            minW="0"
+            maxW="480px"
+            mx={{ base: 0, md: 8 }}
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+          >
             {!isSent ? (
               <>
-                <Heading as="h2" size="lg" mb={6} color="trustBlue.500" fontWeight="semibold" letterSpacing="tight">
+                <Heading as="h2" size={{ base: 'md', md: 'lg' }} mb={6} color="trustBlue.500" fontWeight="semibold" letterSpacing="tight">
                   Share Your Location
                 </Heading>
                 {locationError && (
@@ -126,6 +158,8 @@ function App() {
                   message={message}
                   setMessage={setMessage}
                   location={location}
+                  name={name}
+                  setName={setName}
                   formSize="lg"
                   buttonSize="xl"
                 />
