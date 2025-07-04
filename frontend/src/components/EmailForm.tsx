@@ -29,8 +29,8 @@ const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, 
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Use the real web app URL if provided, otherwise fallback
-    const endpoint = (window as any).pinsafeEndpoint || 'https://your-serverless-form-endpoint.com/send';
+    // Use the deployed API endpoint
+    const endpoint = (window as any).pinsafeEndpoint || import.meta.env.VITE_API_ENDPOINT || 'https://location-api-backend.onrender.com/api/location';
     try {
       await fetch(endpoint, {
         method: 'POST',
@@ -43,6 +43,7 @@ const EmailForm = ({ isLoading, onSubmit, email, setEmail, message, setMessage, 
       });
     } catch (err) {
       // Optionally handle error
+      console.error('Error sending location:', err);
     }
     if (typeof (window as any).pinsafeOnSent === 'function') (window as any).pinsafeOnSent();
   };
