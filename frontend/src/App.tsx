@@ -85,7 +85,7 @@ function App() {
       <Flex as="nav" w="100%" px={{ base: 4, md: 10 }} py={4} align="center" boxShadow="sm" bg="white">
         <Heading as="h1" size="lg" color="trustBlue.500" letterSpacing="tight">PinSafe</Heading>
       </Flex>
-      <Flex w="100vw" minH="calc(100vh - 64px)" align="center" justify="center" px={{ base: 2, md: 0 }}>
+      <Flex w="100vw" minH="calc(100vh - 64px)" align="center" justify="center" px={{ base: 2, md: 0 }} py={{ base: 8, md: 16 }}>
         <Flex
           w={{ base: '100vw', md: '90vw', lg: '60vw' }}
           maxW="1200px"
@@ -93,7 +93,6 @@ function App() {
           align="center"
           direction={{ base: 'column', md: 'row' }}
           gap={{ base: 8, md: 0 }}
-          py={{ base: 8, md: 0 }}
         >
           {/* Company Details Card */}
           <Box
@@ -109,7 +108,6 @@ function App() {
             display="flex"
             flexDirection="column"
             justifyContent="center"
-            my={{ base: 8, md: 'auto' }}
           >
             <Heading as="h1" size={{ base: 'lg', md: '2xl' }} color="trustBlue.500" mb={2} fontWeight="bold" letterSpacing="tight">
               PinSafe
