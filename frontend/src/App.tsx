@@ -85,24 +85,24 @@ function App() {
       <Flex as="nav" w="100%" px={{ base: 4, md: 10 }} py={4} align="center" boxShadow="sm" bg="white">
         <Heading as="h1" size="lg" color="trustBlue.500" letterSpacing="tight">PinSafe</Heading>
       </Flex>
-      <Flex w="100vw" minH="calc(100vh - 64px)" align="center" justify="center" px={{ base: 2, md: 0 }} py={{ base: 8, md: 16 }}>
+      <Flex w="100vw" minH="calc(100vh - 64px)" align="center" justify="center" px={{ base: 2, sm: 4, md: 8, lg: 16 }} py={{ base: 4, md: 8, lg: 12 }}>
         <Flex
-          w={{ base: '100vw', md: '90vw', lg: '60vw' }}
-          maxW="1200px"
+          w={{ base: '100vw', md: '92vw', lg: '80vw' }}
+          maxW="1400px"
           justify="space-between"
           align="center"
           direction={{ base: 'column', md: 'row' }}
-          gap={{ base: 8, md: 0 }}
+          gap={{ base: 8, md: 10, lg: 16 }}
         >
           {/* Company Details Card */}
           <Box
-            w={{ base: '100%', md: '45%' }}
+            w={{ base: '100%', md: '48%', lg: '44%' }}
             minW="0"
-            maxW="480px"
+            maxW={{ base: '100%', md: '500px', lg: '600px' }}
             bg="white"
             borderRadius="2xl"
             boxShadow="2xl"
-            p={{ base: 6, md: 10 }}
+            p={{ base: 6, md: 10, lg: 12 }}
             borderWidth={2}
             borderColor="trustBlue.100"
             display="flex"
@@ -131,10 +131,9 @@ function App() {
           </Box>
           {/* Email Form */}
           <Box
-            w={{ base: '100%', md: '45%' }}
+            w={{ base: '100%', md: '48%', lg: '44%' }}
             minW="0"
-            maxW="480px"
-            mx={{ base: 0, md: 8 }}
+            maxW={{ base: '100%', md: '500px', lg: '600px' }}
             display="flex"
             flexDirection="column"
             alignItems="center"
